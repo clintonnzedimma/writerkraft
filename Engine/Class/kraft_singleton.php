@@ -37,6 +37,50 @@ class Kraft_Singleton
 		}
 	}
 
-}	
 
+	public function addComment ($param_comment, $param_user_id) {
+		$param_comment = sanitize_note($param_comment);
+		$param_user_id =  sanitize_note($param_user_id);
+		$date_of_comment = date("Y-m-d");		
+		$time_of_comment = date("H:i");	
+		$kraft_id = $this->get('id');		
+		$sql = "INSERT INTO comments(
+			id,
+			comment,
+			kraft_id,
+			user_id,
+			date_of_comment,
+			time_of_comment
+		)
+		VALUES (
+			NULL,
+			'$param_comment',
+			'$kraft_id',
+			'$param_user_id',
+			'$date_of_comment',
+			'$time_of_comment'
+		)
+		";
+		return $this->DB->query($sql);
+	}
+
+	public function allComments($order) {
+		$order = sanitize_note($order);
+		$sql = "SELECT * FROM comments WHERE kraft_id = '$this->id' ORDER BY id $order";
+		$query = $this->DB->query($sql);
+		$num_rows = $query->num_rows;
+		$data = array();
+
+		if($num_rows > 0) {
+			while ($row = $query->fetch_assoc()) {
+				$data[] = $row;
+			}
+			$retval = array(
+				"data" => $data
+			);
+			return $retval;
+		}
+	} 
+
+}	
 ?>
