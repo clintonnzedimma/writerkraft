@@ -9,4 +9,6 @@ User_Factory::protectPage();
 <br>
 <a href="add-kraft.php">Create Kraft</a>
 <br>
+<a href="my-drafts.php">Drafts</a>
+<br>
 <a href="logout.php">Log out</a>
