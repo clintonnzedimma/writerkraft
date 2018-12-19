@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Clinton Nzedimma
- * @package Kraft
+ * @package Kraft 
  */
 class Kraft_Singleton
 {	
@@ -12,7 +12,7 @@ class Kraft_Singleton
 	{	
 		 $this->DB = new DB();
 		 $this->id = sanitize_note($id);
-		 $this->creator = new User_Singleton($this->get('id'));
+		 $this->creator = new User_Singleton($this->get('user_id'));
 	}
 
 	public function get($par) {

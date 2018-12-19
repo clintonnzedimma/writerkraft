@@ -1,9 +1,9 @@
 <?php
 /**
  * @author Clinton Nzedimma
- * @package Kraft
+ * @package Kraft Draft
  */
-class Kraft_Factory Implements KraftStaticInterface
+class Kraft_Draft_Factory Implements KraftStaticInterface
 {
 	public static $DB;
 	function __construct()
@@ -23,7 +23,7 @@ class Kraft_Factory Implements KraftStaticInterface
 		$upload->pushImageTo("cover-art");
 		$cover_img = $upload->data['new_file_name'];	
 
-		$sql = "INSERT INTO krafts (
+		$sql = "INSERT INTO drafts (
 			id,
 			title,
 			writeup,
@@ -45,15 +45,36 @@ class Kraft_Factory Implements KraftStaticInterface
 		return self::$DB->query($sql);
 	}
 
+
 	public static function existsById($param_id){
 		$param_id = sanitize_note($param_id);
-		$sql = "SELECT * FROM krafts WHERE id = '$param_id' ";
+		$sql = "SELECT * FROM drafts WHERE id = '$param_id' ";
 		$query = self::$DB->query($sql);
 		$num_rows = $query->num_rows;
 		return ($num_rows > 0) ? true : false;
 	}
 
+	public static function allByUserId($param_user_id){
+		$param_user_id = sanitize_note($param_user_id);
+		$sql = "SELECT * FROM drafts WHERE user_id = '$param_user_id' ";
+		$query = self::$DB->query($sql);
+		$num_rows = $query->num_rows;
+		$data = array();
+
+		if ($num_rows > 0) {
+			while ($row = $query->fetch_assoc()) {
+				$data[] = $row;
+			}
+
+			$retval = array(
+				"data" => $data
+			);
+			return $retval;	
+		}
+
+	}
+
 }
 #Static Initializiation
-new Kraft_Factory();
+new  Kraft_Draft_Factory();
 ?>

@@ -60,6 +60,7 @@ class User_Factory
 		$num_rows = $query->num_rows;
 		return($num_rows > 0) ? true : false;
 	}
+
 	public static function getByUsername($par, $param_username){
 		$par = sanitize_note($par);
 		$param_username = sanitize_note($param_username); 
@@ -81,7 +82,31 @@ class User_Factory
 			}
 			return $value;
 		 }
-		}	
+	}
+
+	public static function getById($par, $param_id){
+		$par = sanitize_note($par);
+		$param_id = sanitize_note($param_id); 
+		$sql = "SELECT * FROM users WHERE id = '$param_id' ";
+		$query = self::$DB->query($sql);
+		$num_rows = $query->num_rows;
+
+		if ($num_rows>0) {
+			while ($row = $query->fetch_assoc()) {
+				switch ($par) {
+					case $par:
+						$value = $row[$par];
+						break;
+
+					default:
+						$value = null;
+						break;
+				}
+			}
+			return $value;
+
+		}
+	}			
 
 
 	public static function passwordCheckByUsername($param_username, $param_password) {
@@ -107,14 +132,13 @@ class User_Factory
 			$_SESSION['writerkraft_username'] = $param;
 		}	
 
-
 		public static function logOut() {
 			session_unset($_SESSION['writerkraft_username']);
 		}
 
 		public static function protectPage() {
 			if (!isset($_SESSION['writerkraft_username'])) {
-				header("Locaton:login.php");
+				header("Location:login.php");
 				exit();
 			}
 		}		
