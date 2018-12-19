@@ -67,6 +67,7 @@ if (isset($_POST['sign_up'])) {
 		$success = "Sign up successful !";
 		print_r($success);
 		User_Factory::signUp();
+		User_Factory::authenticate($username);
 		header("Location:home.php");
 		exit();
 	}

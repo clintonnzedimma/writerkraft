@@ -39,11 +39,16 @@ if (isset($_POST['add-kraft'])) {
 
 	if (!empty($errors)) {
 		print_r($errors);
-	} else {
+	} else if ($_POST['add-kraft'] == 'to-publish' && empty($errors)) {
+		// Publishing kraft
 		$success = "KRAFT POSTED";
 		echo $success;
 		Kraft_Factory::addNew($u->get('id'));
-
+	} else if ($_POST['add-kraft'] == 'to-draft' && empty($errors)) {
+		// Saving kraft to draft
+		$success = "KRAFT SAVED TO DRAFT";
+		echo $success;
+		Kraft_Draft_Factory::addNew($u->get('id'));
 	}
 }
 ?>
