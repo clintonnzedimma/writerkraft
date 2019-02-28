@@ -3,7 +3,7 @@
  * @author Clinton Nzedimma
  * @package Users
  */
-class User_Factory
+class User_Factory Extends Pagination
 {
 	public static $DB;
 	function __construct()
@@ -16,7 +16,6 @@ class User_Factory
 		$full_name = sanitize_note($_REQUEST['full_name']);
 		$password = sanitize_note(password_hash($_REQUEST['password'], PASSWORD_DEFAULT));
 		$email = sanitize_note($_REQUEST['email']);
-		$sex = sanitize_note($_REQUEST['sex']);	
 		$date_of_reg = date("Y-m-d");		
 		$time_of_reg = date("H:i");		
 		
@@ -27,7 +26,6 @@ class User_Factory
 			full_name,
 			password,
 			email,
-			sex,
 			date_of_reg,
 			time_of_reg				
 		) 
@@ -37,7 +35,6 @@ class User_Factory
 			'$full_name',
 			'$password',
 			'$email',
-			'$sex',
 			'$date_of_reg',
 			'$time_of_reg'						
 		)";
@@ -147,6 +144,64 @@ class User_Factory
 			return (isset($_SESSION['writerkraft_username'])) ? true : false;
 		}	
 
+	public static function topUsersAssoc ($order, $num_result_per_page, $page_num) {
+		/** 
+		* %%% SUBJECT TO REVIEW BECAUSE OF NO TOP USERS RANKING ALGORITHM %%%
+		* @param order=>*ASC or DESC by id*,num_result_per_page => *number of result to return*, page_num => *page number*
+		* @method returns all top users
+		*/
+		$order = sanitize_note($order);
+		self::$get_num_result_per_page = $num_result_per_page ;
+		self::$get_page_num = $page_num;
+		$starting_limit_number = (self::$get_page_num-1) * self::$get_num_result_per_page;
+
+		$sql = "SELECT * FROM users ORDER BY id $order LIMIT $starting_limit_number, $num_result_per_page";
+		$query = self::$DB->query($sql);
+		$num_rows = $query->num_rows;
+		$data = array();
+		if ($num_rows > 0) {
+			while ($row = $query->fetch_assoc()) {
+				$data[] = $row; 
+			}
+			$retval = array(
+				"data" => $data,
+				"page_links" => self::pagesAssoc(self::$DB->query("SELECT * FROM users")->num_rows),
+				"num_of_pages" =>self::$number_of_pages
+			);
+
+			return $retval;
+		}
+	}
+
+
+
+public static function recentlyJoinedUsersAssoc ($order, $num_result_per_page, $page_num) {
+		/**
+		* @param order=>*ASC or DESC by id*,num_result_per_page => *number of result to return*, page_num => *page number*
+		* @method returns all top users
+		*/
+		$order = sanitize_note($order);
+		self::$get_num_result_per_page = $num_result_per_page ;
+		self::$get_page_num = $page_num;
+		$starting_limit_number = (self::$get_page_num-1) * self::$get_num_result_per_page;
+
+		$sql = "SELECT * FROM users ORDER BY id $order LIMIT $starting_limit_number, $num_result_per_page";
+		$query = self::$DB->query($sql);
+		$num_rows = $query->num_rows;
+		$data = array();
+		if ($num_rows > 0) {
+			while ($row = $query->fetch_assoc()) {
+				$data[] = $row; 
+			}
+			$retval = array(
+				"data" => $data,
+				"page_links" => self::pagesAssoc(self::$DB->query("SELECT * FROM users")->num_rows),
+				"num_of_pages" =>self::$number_of_pages
+			);
+
+			return $retval;
+		}
+	}
 
 }
 

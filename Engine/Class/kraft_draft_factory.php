@@ -3,7 +3,7 @@
  * @author Clinton Nzedimma
  * @package Kraft Draft
  */
-class Kraft_Draft_Factory Implements KraftStaticInterface
+class Kraft_Draft_Factory Extends Pagination Implements KraftStaticInterface
 {
 	public static $DB;
 	function __construct()
@@ -15,18 +15,28 @@ class Kraft_Draft_Factory Implements KraftStaticInterface
 	{
 		$title = sanitize_note($_REQUEST["title"]);
 		$writeup = sanitize_note($_REQUEST["writeup"]);
+		$category = sanitize_note($_REQUEST['category']);
+		$editor_note = sanitize_note($_POST['editor_note']);
 		$date_of_post = date("Y-m-d");		
 		$time_of_post = date("H:i");
 
 		/*upload image*/			
 		$upload = new Upload('image', 'cover_img', 2);
-		$upload->pushImageTo("cover-art");
-		$cover_img = $upload->data['new_file_name'];	
+
+		// Upload cover art when upload is not empty 
+		if (!$upload->isEmpty()) {
+			$upload->pushImageTo("img/cover-art"); // uploading image to directory
+			$cover_img = $upload->data['new_file_name'];
+		} else {
+			$cover_img = null;
+		}	
 
 		$sql = "INSERT INTO drafts (
 			id,
 			title,
 			writeup,
+			category,
+			editor_note,
 			date_of_post,
 			time_of_post,
 			cover_img,
@@ -36,6 +46,8 @@ class Kraft_Draft_Factory Implements KraftStaticInterface
 			NULL,
 			'$title',
 			'$writeup',
+			'$category',
+			'$editor_note',
 			'$date_of_post',
 			'$time_of_post',
 			'$cover_img',

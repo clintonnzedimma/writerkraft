@@ -68,7 +68,7 @@ class Upload
 	}	
 
 	public function isEmpty() {
-		return (!isset($this->file)) ? true : false;
+		return (strlen($this->file_tmp) == 0) ? true : false; // subject to review
 	}
 
 	public function pushImageTo($directory) {

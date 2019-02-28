@@ -35,14 +35,31 @@ class User_Singleton
 		}
 	}
 
-		public function modifyProfile() {
-			$full_name = sanitize_note($_REQUEST['full_name']);
-			$email = sanitize_note($_REQUEST['email']);
-			$sex = sanitize_note($_REQUEST['sex']); 
+		public function modifyProfile($init_array) {
+			$_PASTE = $init_array;
+
+			$full_name = sanitize_note($_PASTE['full_name']);
+			$bio = sanitize_note($_PASTE['bio']);
+			$occupation = sanitize_note($_PASTE['occupation']);
+			$location = sanitize_note($_PASTE['location']);
+			$fav_book = sanitize_note($_PASTE['fav_book']);
+			$fav_word = sanitize_note($_PASTE['fav_word']);
+			$fav_vice = sanitize_note($_PASTE['fav_vice']);
+			$fav_colour = sanitize_note($_PASTE['fav_colour']);
+			$fav_person = sanitize_note($_PASTE['fav_person']);
+			$qualifications = sanitize_note($_PASTE['qualifications']);
+
 			$sql = "UPDATE users SET
 				full_name = '$full_name',
-				email='$email',
-				sex = '$sex' 
+				bio = '$bio',
+				occupation = '$occupation',
+				location = '$location',
+				fav_word = '$fav_word',
+				fav_book = '$fav_book',
+				fav_vice = '$fav_vice',
+				fav_colour = '$fav_colour',
+				fav_person = '$fav_person',
+				qualifications = '$qualifications'
 				WHERE id = '$this->id' 
 			";
 			return $this->DB->query($sql);
@@ -59,7 +76,7 @@ class User_Singleton
 		public function changeDpData ($par) {
 			try {
 				/* delete old profile picture*/
-				unlink("avatars/".$this->get('profile_pic')); // change here later
+				unlink("img/dp/".$this->get('profile_pic')); 
 			} catch (Exception $e) { }
 			
 			$par = sanitize_note($par);

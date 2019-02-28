@@ -6,6 +6,9 @@ if (User_Factory::isLoggedIn()) {
 	exit();
 }
 
+$warning_icon_html = '<i class="zmdi zmdi-assignment-alert warning-icon"></i>';
+$success_icon_html = '<i class="zmdi zmdi-assignment-alert check-icon"></i>';
+
 if (isset($_POST['login'])) {
 	# required fields
 	$req_fields = array('username', 'password');
@@ -17,24 +20,25 @@ if (isset($_POST['login'])) {
 
 	/* Handling errors */
 	if (!mandatory_fields($req_fields)) {
-		$errors[] = "Please fill all fields !";
+		$errors[] = $warning_icon_html."Please fill all fields !";
 	}
 	if (!User_Factory::usernameExists($username)) {
-		$errors[] = "This username  <b> $username </b> does not exist !";
+		$errors[] = $warning_icon_html."This username  <b> $username </b> does not exist !";
 	}
 	if (strlen($username) < 3) {
-		$errors[] = "Invalid username !";
+		$errors[] = $warning_icon_html."Invalid username !";
 	}
 	if (User_Factory::usernameExists($username) && !User_Factory::passwordCheckByUsername($username, $password)) {
-		$errors[] = "Wrong password !";
+		$errors[] = $warning_icon_html."Wrong password !";
 	}
 	
 	if (!empty($errors)) {
-			print_r($errors);
+			$ERROR_MESSAGE = error_msg($errors);
 		} else {
-			$success = "Login Successful!";
+			$success = $success_icon_html."Login Successful!";
+			$SUCCESS_MESSAGE = success_msg($success); 
 			User_Factory::authenticate($username);
-			header("Location:home.php");
+			header("Location:index.php");
 			exit();
 		}
 
